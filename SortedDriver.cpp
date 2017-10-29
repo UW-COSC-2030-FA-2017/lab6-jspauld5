@@ -1,18 +1,20 @@
 // SortedDriver.cpp
+// Jared Spaulding 10/26/2017
 
 // tom bailey   1445  25 mar 2014
 // Construct sorted sequences and call functions that 
 //   process the sorted sequences.
 
+// use 'g++ -std=c++11 SortedDriver.cpp' to run
+
 
 #include "RandomUtilities.h"
 #include "ContainerPrinting.h"
-#include "winTimer.h"
+#include "winTimer.cpp"
 #include <list>
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
 
 using namespace std;
 
@@ -63,8 +65,36 @@ getWords(size_t numWords, size_t wordLength, string alphabet)
 double
 mostIsolated(vector<double> & number)
 {
-	// STUB  STUB  STUB
-	return -123.456;
+	struct iso_sides {
+		double num;
+		double left_side;
+		double right_side;
+	};
+
+	// make initial iso set num, left_side, and right_side
+	iso_sides iso;
+	iso.num = number.at(0);
+	iso.left_side = 0;
+	iso.right_side = number.at(1) - number.at(0);
+
+	// iterate through the vector
+	for (int i = 1; i < number.size() -1; i++) {
+		// make current iso to compare with original iso
+		iso_sides current_iso;
+		// set num, left_side, and right_side
+		current_iso.num = number.at(i);
+		current_iso.left_side = number.at(i) - number.at(i - 1);
+		current_iso.right_side = number.at(i + 1) - number.at(i);
+
+		// check if it is max isolation
+		if (current_iso.left_side > iso.left_side || current_iso.right_side > iso.right_side) {
+			if (iso.left_side < current_iso.left_side && iso.left_side < current_iso.right_side ||
+				iso.right_side < current_iso.left_side && iso.right_side < current_iso.right_side) {
+				iso = current_iso;
+			}
+		}
+	}
+	return iso.num;
 }
 
 
@@ -74,8 +104,32 @@ mostIsolated(vector<double> & number)
 int
 unmatched(list<string> & A, list<string> & B)
 {
-	// STUB  STUB  STUB
-	return -1;
+	// init counter
+	int count = 0;
+	string b = " ";
+
+	// init iterators
+	std::list<string>::const_iterator iterateA = A.begin();
+	std::list<string>::const_iterator iterateB = B.begin();
+
+	// make string of B
+	while (iterateB != B.end()) {
+		b.append(" ").append(*iterateB);
+		iterateB++;
+	}
+
+	std:size_t found;
+
+	// iterate though A and check in b
+	// used cpuspus.com as a reference cant get it any more efficient 
+	while (iterateA != A.end()) {
+		found = b.find(*iterateA);
+		if (found == std::string::npos) 
+			count++;
+		iterateA++;
+	}
+	
+	return count;
 }
 
 

@@ -28,7 +28,7 @@ void randomizeSeed()
 	static bool called = false;
 	if( ! called )
 	{
-      srand( unsigned long( std::time( NULL ) ) );
+      srand( std::time( NULL ) ) ;
 		called = true;
 	}
 }
